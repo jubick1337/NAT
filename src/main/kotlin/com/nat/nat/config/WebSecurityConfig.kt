@@ -23,32 +23,24 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     override fun configure(httpSecurity: HttpSecurity) {
         httpSecurity
             .authorizeRequests()
-            .antMatchers("/", "/home", "/registration").permitAll()
-            .anyRequest().authenticated()
+                .antMatchers("/", "/home", "/registration").permitAll()
+                .anyRequest().authenticated()
             .and()
-            .formLogin()
-            .loginPage("/login")
-            .permitAll()
+                .formLogin()
+                .defaultSuccessUrl("/hello", true)
+                .loginPage("/login")
+                .permitAll()
             .and()
-            .logout()
-            .permitAll()
+                .logout()
+                .permitAll()
     }
 
-    @Bean
-    override fun userDetailsService(): UserDetailsService {
-        val user = User.withDefaultPasswordEncoder()
-            .username("user")
-            .password("password")
-            .roles("USER")
-            .build()
-        return InMemoryUserDetailsManager(user)
-    }
 
     override fun configure(auth: AuthenticationManagerBuilder?) {
         auth!!.jdbcAuthentication()
             .dataSource(this.datasource)
             .passwordEncoder(NoOpPasswordEncoder.getInstance())
             .usersByUsernameQuery("select username, password, active from user where username=?")
-            .authoritiesByUsernameQuery("select u.username, ur.roles from user u inner join user_role ur on u.id = ur.user_id where u.username=?");
+            .authoritiesByUsernameQuery("select u.username, user u where u.username=?");
     }
 }
