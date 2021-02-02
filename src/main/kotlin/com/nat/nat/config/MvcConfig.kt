@@ -1,4 +1,4 @@
-package com.nat.nat
+package com.nat.nat.config
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry
