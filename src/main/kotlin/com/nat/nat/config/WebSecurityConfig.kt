@@ -40,7 +40,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         auth!!.jdbcAuthentication()
             .dataSource(this.datasource)
             .passwordEncoder(NoOpPasswordEncoder.getInstance())
-            .usersByUsernameQuery("select username, password, active from user where username=?")
+            .usersByUsernameQuery("select username, password, is_active from user where username=?")
             .authoritiesByUsernameQuery("select u.username from user u");
     }
 }
