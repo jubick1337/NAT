@@ -41,6 +41,6 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             .dataSource(this.datasource)
             .passwordEncoder(NoOpPasswordEncoder.getInstance())
             .usersByUsernameQuery("select username, password, active from user where username=?")
-            .authoritiesByUsernameQuery("select u.username, user u where u.username=?");
+            .authoritiesByUsernameQuery("select u.username from user u");
     }
 }
