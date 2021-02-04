@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping
 
 @Controller
 class MainController {
+
+    @Autowired
+    private val userRepo: UserRepo? = null
+
     @GetMapping("/")
     fun main(model: Map<String?, Any?>?): String {
         return "home"
@@ -23,11 +27,9 @@ class MainController {
         return "hello"
     }
 
-    @Autowired
-    private val userRepo: UserRepo? = null
-
     @GetMapping("/registration")
     fun registration(): String {
+        print("Получили фронт")
         return "registration"
     }
 
@@ -40,6 +42,7 @@ class MainController {
         }
         user.isActive = true
         userRepo.save(user)
+
         return "redirect:/login"
     }
 }
