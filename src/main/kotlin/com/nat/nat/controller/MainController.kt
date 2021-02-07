@@ -1,5 +1,6 @@
 package com.nat.nat.controller
 
+import com.nat.nat.entity.Role
 import com.nat.nat.entity.User
 import com.nat.nat.repos.UserRepo
 
@@ -8,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import java.util.*
 
 
 @Controller
@@ -34,15 +36,15 @@ class MainController {
     }
 
     @PostMapping("/registration")
-    fun addUser(user: User, model: MutableMap<String?, Any?>): String {
-        val userFromDb: User? = userRepo!!.findByUsername(user.username)
+    fun addUser(user: User, model: MutableMap<String?, Any?>): String? {
+        val userFromDb = userRepo!!.findByUsername(user.username)
         if (userFromDb != null) {
             model["message"] = "User exists!"
             return "registration"
         }
         user.isActive = true
+        user.roles = Collections.singleton(Role.USER)
         userRepo.save(user)
-
         return "redirect:/login"
     }
 }

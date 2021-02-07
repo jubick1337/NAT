@@ -1,21 +1,22 @@
 package com.nat.nat.entity
 
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import javax.persistence.*
+
 
 @Entity
+@Table(name = "usr")
 class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long = 0
-
+    var id: Long? = null
     var username: String? = null
     var password: String? = null
     var isActive = false
-    private var youtubeToken: String = ""
-    private var spotifyToken: String = ""
 
+    @ElementCollection(targetClass = Role::class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_role", joinColumns = [JoinColumn(name = "user_id")])
+    @Enumerated(
+        EnumType.STRING
+    )
+    var roles: Set<Role>? = null
 }

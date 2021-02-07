@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.NoOpPasswordEncoder
 import org.springframework.security.provisioning.InMemoryUserDetailsManager
+import java.lang.Exception
 import javax.sql.DataSource
 
 @Configuration
@@ -36,11 +37,12 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     }
 
 
-    override fun configure(auth: AuthenticationManagerBuilder?) {
-        auth!!.jdbcAuthentication()
+    @Throws(Exception::class)
+    override fun configure(auth: AuthenticationManagerBuilder) {
+        auth.jdbcAuthentication()
             .dataSource(this.datasource)
             .passwordEncoder(NoOpPasswordEncoder.getInstance())
-            .usersByUsernameQuery("select username, password, is_active from user where username=?")
-            .authoritiesByUsernameQuery("select u.username from user u");
+            .usersByUsernameQuery("select username, password, is_active from usr where username=?")
+            .authoritiesByUsernameQuery("select u.username, ur.roles from usr u inner join user_role ur on u.id = ur.user_id where u.username=?")
     }
 }
