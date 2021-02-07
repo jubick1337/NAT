@@ -31,7 +31,6 @@ class MainController {
 
     @GetMapping("/registration")
     fun registration(): String {
-        print("Получили фронт")
         return "registration"
     }
 
