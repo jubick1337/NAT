@@ -1,14 +1,40 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Spring Security Example </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/css/registration.css" rel="stylesheet">
+
 </head>
 <body>
-<form action="/registration" method="post">
-    <div><label> User Name : <input type="text" name="username"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
-    <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
-    <div><input type="submit" value="Sign In"/></div>
-</form>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card card-signin my-5">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Регистрация</h5>
+                    <form class="form-signin" action="/registration" method="post">
+                        <div class="form-label-group">
+                            <input type="text" id="login" class="form-control" placeholder="Имя пользователя" name="username">
+                            <label for="login">Имя пользователя</label>
+                        </div>
+
+                        <div class="form-label-group">
+                            <input type="password" id="Password" class="form-control" placeholder="Пароль" name="password">
+                            <label for="Password">Пароль</label>
+                        </div>
+                        <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+                        <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Зарегаться</button>
+                        <hr class="my-4">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
-</html>

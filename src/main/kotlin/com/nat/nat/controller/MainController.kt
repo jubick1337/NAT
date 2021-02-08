@@ -20,7 +20,7 @@ class MainController {
 
     @GetMapping("/")
     fun main(model: Map<String?, Any?>?): String {
-        return "home"
+        return "index"
     }
 
     @GetMapping("/hello")
