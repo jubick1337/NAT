@@ -41,6 +41,11 @@ class MainController {
         return "registration"
     }
 
+    @GetMapping("/services")
+    fun services(): String {
+        return "services"
+    }
+
     @GetMapping("/addGoogle")
     fun addSpotify(): String? {
         val googleClientId: String = "365295871686-1jfq9997me458vnspsb2amcrp04jtgq6.apps.googleusercontent.com"
@@ -49,7 +54,7 @@ class MainController {
 
         var service: OAuth20Service = ServiceBuilder(googleClientId)
                 .apiSecret(googelClientSecret)
-                .callback("http://localhost:8080/tokenRegistration")
+                .callback("http://localhost:8080/hello")
                 .defaultScope("profile")
                 .build(GoogleApi20.instance())
 
