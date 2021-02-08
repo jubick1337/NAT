@@ -16,12 +16,17 @@ import java.util.*
 import com.github.scribejava.apis.HHApi
 
 import com.github.scribejava.core.builder.ServiceBuilder
+import com.nat.nat.services.Oauth2Service
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 
 
 @Controller
-class MainController {
-
+class MainController(
+        @Autowired
+        @Qualifier("googleService") var googleService: Oauth2Service
+)
+{
     @Autowired
     private val userRepo: UserRepo? = null
 
@@ -42,19 +47,15 @@ class MainController {
     }
 
     @GetMapping("/addGoogle")
-    fun addSpotify(): String? {
-        val googleClientId: String = "365295871686-1jfq9997me458vnspsb2amcrp04jtgq6.apps.googleusercontent.com"
-
-        val googelClientSecret: String = "z3NSgED2bH8ft8ofeCtULfEL"
-
-        var service: OAuth20Service = ServiceBuilder(googleClientId)
-                .apiSecret(googelClientSecret)
-                .callback("http://localhost:8080/tokenRegistration")
-                .defaultScope("profile")
-                .build(GoogleApi20.instance())
-
-        val authorizationUrl = service.getAuthorizationUrl()
+    fun addGoogle(): String? {
+        val authorizationUrl = googleService.getUrl()
         return "redirect:${authorizationUrl}"
+    }
+
+    @GetMapping("/tokenRegistration")
+    fun tokenRegistration (code:String): OAuth2AccessToken? {
+
+         return googleService.getToken(code)
     }
 
 
