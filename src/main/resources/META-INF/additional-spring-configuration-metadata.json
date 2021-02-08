@@ -1,0 +1,13 @@
+{
+    "properties": [
+        {
+            "name": "google.clientId",
+            "type": "java.lang.String",
+            "description": "Description for google.clientId."
+        },
+        {
+            "name": "spring.google.clientId",
+            "type": "java.lang.String",
+            "description": "Description for spring.google.clientId."
+        }
+    ] }

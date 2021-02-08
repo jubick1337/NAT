@@ -27,6 +27,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.security:spring-security-test")
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("com.github.scribejava:scribejava:8.1.0")
+    implementation("com.github.scribejava:scribejava-apis:8.1.0")
+    implementation("com.github.scribejava:scribejava-core:8.1.0")
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
