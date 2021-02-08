@@ -7,5 +7,5 @@ spring:
             clientId: 365295871686-1jfq9997me458vnspsb2amcrp04jtgq6.apps.googleusercontent.com
             clientSecret: z3NSgED2bH8ft8ofeCtULfEL
           spotify:
-            clientId:3291f7da415648f2bdf709af12fd824e
+            clientId: 3291f7da415648f2bdf709af12fd824e
             clientSecret: 137adb472d9e4dba88690e88292c1d9f
