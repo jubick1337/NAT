@@ -1,7 +1,6 @@
 package com.nat.nat.controller
 
 import com.github.scribejava.apis.GoogleApi20
-import com.github.scribejava.core.model.OAuth2AccessToken
 import com.github.scribejava.core.oauth.OAuth20Service
 import com.nat.nat.entity.Role
 import com.nat.nat.entity.User
@@ -13,10 +12,8 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import java.util.*
-import com.github.scribejava.apis.HHApi
 
 import com.github.scribejava.core.builder.ServiceBuilder
-import org.springframework.beans.factory.annotation.Value
 
 
 @Controller
@@ -47,13 +44,13 @@ class MainController {
     }
 
     @GetMapping("/addGoogle")
-    fun addSpotify(): String? {
+    fun addGoogle(): String? {
         val googleClientId: String = "365295871686-1jfq9997me458vnspsb2amcrp04jtgq6.apps.googleusercontent.com"
 
-        val googelClientSecret: String = "z3NSgED2bH8ft8ofeCtULfEL"
+        val googleClientSecret: String = "z3NSgED2bH8ft8ofeCtULfEL"
 
         var service: OAuth20Service = ServiceBuilder(googleClientId)
-                .apiSecret(googelClientSecret)
+                .apiSecret(googleClientSecret)
                 .callback("http://localhost:8080/hello")
                 .defaultScope("profile")
                 .build(GoogleApi20.instance())
