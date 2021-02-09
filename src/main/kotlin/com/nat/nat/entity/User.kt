@@ -12,7 +12,7 @@ class User {
     var username: String? = null
     var password: String? = null
     var isActive = false
-    var youtubeToken: String? = null
+    var googleToken: String? = null
     var spotifyToken: String? = null
 
     @ElementCollection(targetClass = Role::class, fetch = FetchType.EAGER)

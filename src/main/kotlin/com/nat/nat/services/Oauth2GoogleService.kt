@@ -18,13 +18,13 @@ class Oauth2GoogleService(@Autowired
 
     val service: OAuth20Service = ServiceBuilder(googleClientId)
             .apiSecret(googleClientSecret)
-            .callback("http://localhost:8080/services")
+            .callback("http://localhost:8080/services?from=google")
             .defaultScope("profile")
             .build(GoogleApi20.instance())
 
 
     override fun getUrl(): String? {
-        return service.getAuthorizationUrl()
+        return service.authorizationUrl
     }
 
     override fun getToken(code: String): OAuth2AccessToken? {
