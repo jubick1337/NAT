@@ -46,7 +46,7 @@ class MainController {
     @GetMapping("/addGoogle")
     fun addGoogle(): String? {
         val googleClientId: String = "365295871686-1jfq9997me458vnspsb2amcrp04jtgq6.apps.googleusercontent.com"
-
+        val user = SecurityContextHolder.getContext().authentication.principal
         val googleClientSecret: String = "z3NSgED2bH8ft8ofeCtULfEL"
 
         var service: OAuth20Service = ServiceBuilder(googleClientId)
