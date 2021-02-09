@@ -14,10 +14,15 @@ import org.springframework.web.bind.annotation.PostMapping
 import java.util.*
 
 import com.github.scribejava.core.builder.ServiceBuilder
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.core.env.Environment
 
 
 @Controller
 class MainController {
+
+    @Autowired
+    private val env: Environment? = null
 
     @Autowired
     private val userRepo: UserRepo? = null
@@ -45,15 +50,15 @@ class MainController {
 
     @GetMapping("/addGoogle")
     fun addGoogle(): String? {
-        val googleClientId: String = "365295871686-1jfq9997me458vnspsb2amcrp04jtgq6.apps.googleusercontent.com"
+        val googleClientId: String? = this.env?.getProperty("google.client.id")
         val user = SecurityContextHolder.getContext().authentication.principal
-        val googleClientSecret: String = "z3NSgED2bH8ft8ofeCtULfEL"
+        val googleClientSecret: String? = this.env?.getProperty("google.client.secret")
 
         var service: OAuth20Service = ServiceBuilder(googleClientId)
-                .apiSecret(googleClientSecret)
-                .callback("http://localhost:8080/hello")
-                .defaultScope("profile")
-                .build(GoogleApi20.instance())
+            .apiSecret(googleClientSecret)
+            .callback("http://localhost:8080/hello")
+            .defaultScope("profile")
+            .build(GoogleApi20.instance())
 
         val authorizationUrl = service.getAuthorizationUrl()
         return "redirect:${authorizationUrl}"
