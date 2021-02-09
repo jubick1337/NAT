@@ -19,10 +19,10 @@ import org.springframework.security.core.userdetails.User as SpringUser
 
 @Controller
 class MainController(
-        @Autowired
-        @Qualifier("googleService") var googleService: Oauth2Service,
-        @Autowired
-        @Qualifier("spotifyService") var spotifyService: Oauth2Service
+    @Autowired
+    @Qualifier("googleService") var googleService: Oauth2Service,
+    @Autowired
+    @Qualifier("spotifyService") var spotifyService: Oauth2Service
 
 ) {
     @Autowired
@@ -51,18 +51,18 @@ class MainController(
     }
 
 
-    @GetMapping("/services", params = ["from","code"])
-    fun services(from: String,code: String): String {
-        val token: String = googleService.getToken(code)!!.accessToken
+    @GetMapping("/services", params = ["from", "code"])
+    fun services(from: String, code: String): String {
+        val currentService: Oauth2Service = if (from == "google") googleService else spotifyService
+        val token: String = currentService.getToken(code)!!.accessToken
         val springUser = SecurityContextHolder.getContext().authentication.principal as SpringUser
         val username: String = springUser.username
         val userFromDb: User? = userRepo?.findByUsername(username)
-        val attrName : String = map[from] as String
+        val attrName: String = map[from] as String
 
         if (userFromDb != null) {
-            val user = userFromDb as User
-            setFields(user, listOf(Pair(attrName,token)))
-            userRepo?.save(user)
+            setFields(userFromDb, listOf(Pair(attrName, token)))
+            userRepo?.save(userFromDb)
         }
         return "services"
     }
