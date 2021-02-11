@@ -11,7 +11,7 @@ import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
 
-@Service("spotifyService")
+@Service("spotifyOauthService")
 class Oauth2SpotifyService(@Autowired
                            final val env: Environment?) : Oauth2Service {
     private val spotifyClientId: String? = this.env?.getProperty("spotify.client.id")
@@ -21,7 +21,7 @@ class Oauth2SpotifyService(@Autowired
     val service: OAuth20Service = ServiceBuilder(spotifyClientId)
             .apiSecret(spotifyClientSecret)
             .callback("http://localhost:8080/services?from=spotify")
-            .defaultScope("user-read-private")
+            .defaultScope("user-read-private, user-library-read")
             .build(SpotifyApi20.instance())
 
     override fun getUrl(): String? {

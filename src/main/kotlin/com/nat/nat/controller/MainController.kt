@@ -3,27 +3,29 @@ package com.nat.nat.controller
 import com.nat.nat.entity.Role
 import com.nat.nat.entity.User
 import com.nat.nat.repos.UserRepo
-
+import com.nat.nat.services.ApiWorker
+import com.nat.nat.services.Oauth2Service
+import com.nat.nat.utility.setFields
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import java.util.*
-
-import com.nat.nat.services.Oauth2Service
-import com.nat.nat.utility.setFields
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.security.core.userdetails.User as SpringUser
 
 
 @Controller
 class MainController(
     @Autowired
-    @Qualifier("googleService") var googleService: Oauth2Service,
+    @Qualifier("googleOauthService") var googleService: Oauth2Service,
     @Autowired
-    @Qualifier("spotifyService") var spotifyService: Oauth2Service
-
+    @Qualifier("spotifyOauthService") var spotifyService: Oauth2Service,
+    @Autowired
+    @Qualifier("spotifyApiWorkerService") var spotifyApiWorkerService: ApiWorker,
+    @Autowired
+    @Qualifier("youtubeApiWorkerService") var youtubeApiWorkerService: ApiWorker
 ) {
     @Autowired
     private val userRepo: UserRepo? = null
@@ -50,6 +52,18 @@ class MainController(
         return "services"
     }
 
+    @GetMapping("/getPlaylistInfo", params = ["from"])
+    fun getPlaylistInfo(from: String): String {
+        val springUser = SecurityContextHolder.getContext().authentication.principal as SpringUser
+        val username: String = springUser.username
+        val userFromDb: User? = userRepo?.findByUsername(username)
+        val currentWorker: ApiWorker = if (from == "google") youtubeApiWorkerService else spotifyApiWorkerService
+        val token = if (from == "google") userFromDb?.googleToken else userFromDb?.spotifyToken
+        if (userFromDb != null) {
+            currentWorker.getPlaylist(token)
+        }
+        return "services"
+    }
 
     @GetMapping("/services", params = ["from", "code"])
     fun services(from: String, code: String): String {

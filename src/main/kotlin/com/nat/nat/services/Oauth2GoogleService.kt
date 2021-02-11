@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
-@Service("googleService")
+@Service("googleOauthService")
 class Oauth2GoogleService(@Autowired
                           final val env: Environment?
 ) : Oauth2Service {
@@ -19,7 +19,7 @@ class Oauth2GoogleService(@Autowired
     val service: OAuth20Service = ServiceBuilder(googleClientId)
             .apiSecret(googleClientSecret)
             .callback("http://localhost:8080/services?from=google")
-            .defaultScope("profile")
+            .defaultScope("https://www.googleapis.com/auth/youtube.readonly")
             .build(GoogleApi20.instance())
 
 
