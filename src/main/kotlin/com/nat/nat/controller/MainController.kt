@@ -42,7 +42,8 @@ class MainController {
     }
 
     @GetMapping("/services")
-    fun services(): String {
+    fun services(model: MutableMap<String?, Any?>): String {
+        model["username"] = SecurityContextHolder.getContext().authentication.name
         return "services"
     }
 

@@ -1,33 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
 
+
     <!-- Bootstrap core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        input[type=submit] {
+                              background-color: transparent;
+                              border: none;
+                          }
 
-    <!-- Custom styles for this template -->
-    <link href="/css/registration.css" rel="stylesheet">
-
+    </style>
 </head>
 
-<body>
+<body style="background: linear-gradient(to right, #CD853F, #C5007F)">
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" style="color: #ffffff">{{username}}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/hello">Главная</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/services">Сервисы
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <form action="/logout" method="post">
+                        <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+                        <input class="nav-link" type="submit" value="Выйти"/>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Page Content -->
 <div class="container">
-    <div class="row">
-        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-            <div class="card card-signin my-5">
+
+    <!-- Jumbotron Header -->
+    <header class="jumbotron my-4">
+        <h1 class="display-3">На этой странице...</h1>
+        <p class="lead">Вы можете перебросить ваши плейлисты из Spotify в Youtube и наоборот, в случае
+            если вы авторизованы с помощью какого-то из этих сервисов. Если же нет, то самое время чтобы:</p>
+        <ul>
+            <li>
+                <form action="/addSpotify" method="post">
+                    <input class="nav-link" type="submit" value="Авторизоваться через Spotify"/>
+                </form>
+            </li>
+            <li>
+                <form action="/addGoogle" method="post">
+                    <input class="nav-link" type="submit" value="Авторизоваться через Google"/>
+                </form>
+            </li>
+        </ul>
+    </header>
+
+    <!-- Page Features -->
+    <div class="row text-center">
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card h-100">
+                <img class="card-img-top" src="/img/wooman.jpg" alt="">
                 <div class="card-body">
-                    <h5 class="card-title text-center">Sign In</h5>
-                    <form class="form-signin" style="background-color: #ff4040; border-radius: 10px" action="/addGoogle">
-                        <button class="btn btn-lg btn-google btn-block text-uppercase" type="submit"><i class="fab fa-google-f mr-2"></i> Sign in with Google</button>
-                    </form>
-                    <form class="form-signin" style="background-color: #00ff5f; border-radius: 10px" action="/addSpotify">
-                        <button class="btn btn-lg btn-flickr btn-block text-uppercase" type="submit"><i class="fab fa-spotify-f mr-2"></i> Sign in with Spotify</button>
-                    </form>
+                    <h4 class="card-title">Youtube -> Spotify</h4>
+                </div>
+                <div class="card-footer">
+                    <a href="/getPlaylistInfo?from=google" class="btn btn-primary">Синхронизировать</a>
                 </div>
             </div>
         </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card h-100">
+                <img class="card-img-top" src="/img/man.jpg" alt="">
+                <div class="card-body">
+                    <h4 class="card-title">Spotify -> Youtube</h4>
+                </div>
+                <div class="card-footer">
+                    <a href="/getPlaylistInfo?from=spotify" class="btn btn-primary">Синхронизировать</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card h-100">
+                <img class="card-img-top" src="/img/gif/cat.gif" alt="">
+                <div class="card-body">
+                    <h4 class="card-title">Coming soon...</h4>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn btn-primary">Жмак</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card h-100">
+                <img class="card-img-top" src="/img/gif/monkey.gif" alt="">
+                <div class="card-body">
+                    <h4 class="card-title">Coming soon...</h4>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn btn-primary">Жмак</a>
+                </div>
+            </div>
+        </div>
+
     </div>
+    <!-- /.row -->
+
 </div>
 </body>
+
+</html>
