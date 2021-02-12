@@ -1,29 +1,35 @@
 package com.nat.nat.controller
 
-import com.github.scribejava.apis.GoogleApi20
-import com.github.scribejava.core.model.OAuth2AccessToken
-import com.github.scribejava.core.oauth.OAuth20Service
 import com.nat.nat.entity.Role
 import com.nat.nat.entity.User
 import com.nat.nat.repos.UserRepo
-
+import com.nat.nat.services.ApiWorker
+import com.nat.nat.services.Oauth2Service
+import com.nat.nat.utility.setFields
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import java.util.*
-import com.github.scribejava.apis.HHApi
-
-import com.github.scribejava.core.builder.ServiceBuilder
-import org.springframework.beans.factory.annotation.Value
+import org.springframework.security.core.userdetails.User as SpringUser
 
 
 @Controller
-class MainController {
-
+class MainController(
+    @Autowired
+    @Qualifier("googleOauthService") var googleService: Oauth2Service,
+    @Autowired
+    @Qualifier("spotifyOauthService") var spotifyService: Oauth2Service,
+    @Autowired
+    @Qualifier("spotifyApiWorkerService") var spotifyApiWorkerService: ApiWorker,
+    @Autowired
+    @Qualifier("youtubeApiWorkerService") var youtubeApiWorkerService: ApiWorker
+) {
     @Autowired
     private val userRepo: UserRepo? = null
+    private val map: Map<String, String> = mapOf("google" to "googleToken", "spotify" to "spotifyToken")
 
     @GetMapping("/")
     fun main(model: Map<String?, Any?>?): String {
@@ -47,22 +53,46 @@ class MainController {
         return "services"
     }
 
+    @GetMapping("/getPlaylistInfo", params = ["from"])
+    fun getPlaylistInfo(from: String): String {
+        val springUser = SecurityContextHolder.getContext().authentication.principal as SpringUser
+        val username: String = springUser.username
+        val userFromDb: User? = userRepo?.findByUsername(username)
+        val currentWorker: ApiWorker = if (from == "google") youtubeApiWorkerService else spotifyApiWorkerService
+        val token = if (from == "google") userFromDb?.googleToken else userFromDb?.spotifyToken
+        if (userFromDb != null) {
+            currentWorker.getPlaylist(token)
+        }
+        return "services"
+    }
+
+    @GetMapping("/services", params = ["from", "code"])
+    fun services(from: String, code: String): String {
+        val currentService: Oauth2Service = if (from == "google") googleService else spotifyService
+        val token: String = currentService.getToken(code)!!.accessToken
+        val springUser = SecurityContextHolder.getContext().authentication.principal as SpringUser
+        val username: String = springUser.username
+        val userFromDb: User? = userRepo?.findByUsername(username)
+        val attrName: String = map[from] as String
+
+        if (userFromDb != null) {
+            setFields(userFromDb, listOf(Pair(attrName, token)))
+            userRepo?.save(userFromDb)
+        }
+        return "services"
+    }
+
     @GetMapping("/addGoogle")
-    fun addSpotify(): String? {
-        val googleClientId: String = "365295871686-1jfq9997me458vnspsb2amcrp04jtgq6.apps.googleusercontent.com"
-
-        val googelClientSecret: String = "z3NSgED2bH8ft8ofeCtULfEL"
-
-        var service: OAuth20Service = ServiceBuilder(googleClientId)
-                .apiSecret(googelClientSecret)
-                .callback("http://localhost:8080/hello")
-                .defaultScope("profile")
-                .build(GoogleApi20.instance())
-
-        val authorizationUrl = service.getAuthorizationUrl()
+    fun addGoogle(): String? {
+        val authorizationUrl = googleService.getUrl()
         return "redirect:${authorizationUrl}"
     }
 
+    @GetMapping("/addSpotify")
+    fun addSpotify(): String? {
+        val authorizationUrl = spotifyService.getUrl()
+        return "redirect:${authorizationUrl}"
+    }
 
     @PostMapping("/registration")
     fun addUser(user: User, model: MutableMap<String?, Any?>): String? {
