@@ -19,6 +19,8 @@ repositories {
 
 dependencies {
 //    implementation("com.beust:klaxon:5.0.1")
+    // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+    implementation("com.squareup.okhttp3:okhttp")
     implementation("khttp:khttp:1.0.0")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
