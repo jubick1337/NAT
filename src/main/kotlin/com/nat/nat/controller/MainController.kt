@@ -1,5 +1,6 @@
 package com.nat.nat.controller
 
+import com.nat.nat.entity.Playlist
 import com.nat.nat.entity.Role
 import com.nat.nat.entity.User
 import com.nat.nat.repos.UserRepo
@@ -29,7 +30,7 @@ class MainController(
 ) {
     @Autowired
     private val userRepo: UserRepo? = null
-    private val map: Map<String, String> = mapOf("google" to "googleToken", "spotify" to "spotifyToken")
+    private val attrMap: Map<String, String> = mapOf("google" to "googleToken", "spotify" to "spotifyToken")
 
     @GetMapping("/")
     fun main(model: Map<String?, Any?>?): String {
@@ -53,15 +54,19 @@ class MainController(
         return "services"
     }
 
-    @GetMapping("/getPlaylistInfo", params = ["from"])
-    fun getPlaylistInfo(from: String): String {
+    @GetMapping("/synchronize", params = ["from","to"])
+    fun synchronize(from: String, to: String): String {
+        if(from == to) return "services"
         val springUser = SecurityContextHolder.getContext().authentication.principal as SpringUser
         val username: String = springUser.username
         val userFromDb: User? = userRepo?.findByUsername(username)
-        val currentWorker: ApiWorker = if (from == "google") youtubeApiWorkerService else spotifyApiWorkerService
-        val token = if (from == "google") userFromDb?.googleToken else userFromDb?.spotifyToken
+        val sourceWorker: ApiWorker = if (from == "google") youtubeApiWorkerService else spotifyApiWorkerService
+        val destinationWorker: ApiWorker = if (to == "google") youtubeApiWorkerService else spotifyApiWorkerService
+        val sourceToken = if (from == "google") userFromDb?.googleToken else userFromDb?.spotifyToken
+        val destinationToken = if (to == "google") userFromDb?.googleToken else userFromDb?.spotifyToken
         if (userFromDb != null) {
-            currentWorker.getPlaylist(token)
+            val playList: Playlist = sourceWorker.getPlaylist(sourceToken)
+            destinationWorker.addToFavorite(destinationToken,playList)
         }
         return "services"
     }
@@ -73,7 +78,7 @@ class MainController(
         val springUser = SecurityContextHolder.getContext().authentication.principal as SpringUser
         val username: String = springUser.username
         val userFromDb: User? = userRepo?.findByUsername(username)
-        val attrName: String = map[from] as String
+        val attrName: String = attrMap[from] as String
 
         if (userFromDb != null) {
             setFields(userFromDb, listOf(Pair(attrName, token)))

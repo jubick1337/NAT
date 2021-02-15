@@ -21,7 +21,7 @@ class Oauth2SpotifyService(@Autowired
     val service: OAuth20Service = ServiceBuilder(spotifyClientId)
             .apiSecret(spotifyClientSecret)
             .callback("http://localhost:8080/services?from=spotify")
-            .defaultScope("user-read-private, user-library-read")
+            .defaultScope("user-read-private, user-library-read, user-library-modify")
             .build(SpotifyApi20.instance())
 
     override fun getUrl(): String? {

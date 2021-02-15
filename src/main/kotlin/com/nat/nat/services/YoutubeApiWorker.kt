@@ -1,5 +1,6 @@
 package com.nat.nat.services
 
+import com.nat.nat.entity.ApiService
 import com.nat.nat.entity.Playlist
 import com.nat.nat.entity.Song
 import khttp.get
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service
 
 @Service("youtubeApiWorkerService")
 class YoutubeApiWorker : ApiWorker {
-    override fun getPlaylist(oauthToken: String?): Playlist {
+     override fun getPlaylist(oauthToken: String?): Playlist {
         val response = get(
             url = "https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&hl=RU_ru&maxResults=50&myRating=like&key=AIzaSyCKfe8gN2UQaeAzGkHijnp4A_5P0Z50mNE",
             headers = mapOf(
@@ -37,7 +38,7 @@ class YoutubeApiWorker : ApiWorker {
         return Playlist(songs = songs)
     }
 
-    override fun migrateTo() {
+    override fun addToFavorite(oauthToken: String?, playlist: Playlist) {
         TODO("Not yet implemented")
     }
 }
